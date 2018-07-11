@@ -1,70 +1,52 @@
+
 class App {
   constructor() {
+    this.frame = 0;
+    this.active = false;
+    this.animationFrameId = null;
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = 640;
+    this.canvas.height = 400;
+
+    document.body.appendChild(this.canvas);
   }
-}
 
-let app, canvas, frame, animationFrameId, active;
-
-function start() {
-  console.log('start');
-
-  frame = 0;
-  active = true;
-
-  canvas = document.createElement('canvas');
-  canvas.width = 640;
-  canvas.height = 400;
-
-  document.body.appendChild(canvas);
-
-  window.addEventListener('blur', onBlur);
-  window.addEventListener('focus', onFocus);
-
-  animationFrameId = requestAnimationFrame(step);
-}
-
-function pause() {
-  active = false;
-  cancelAnimationFrame(animationFrameId);
-  render();
-}
-
-function resume() {
-  active = true;
-  animationFrameId = requestAnimationFrame(step);
-}
-
-function update() {
-
-}
-
-function render() {
-  let ctx = canvas.getContext('2d');
-  ctx.fillStyle = active ? 'black' : 'gray';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'cyan';
-  ctx.font = '12px sans-serif';
-  ctx.fillText(frame, 12, 24);
-}
-
-function step() {
-  if (active) {
-    animationFrameId = requestAnimationFrame(step);
-    update();
-    render();
-    frame++;
+  pause() {
+    if (this.active) {
+      this.active = false;
+      cancelAnimationFrame(this.animationFrameId);
+      this.render();
+    }
   }
-}
 
-function onBlur() {
-  pause();
-}
+  play() {
+    if (!this.active) {
+      this.active = true;
+      this.step();
+    }
+  }
 
-function onFocus() {
-  resume();
-}
+  update() {
 
-document.addEventListener('DOMContentLoaded', () => {
-  app = new App();
-  start();
-});
+  }
+
+  render() {
+    let ctx = this.canvas.getContext('2d');
+    ctx.fillStyle = this.active ? 'black' : 'gray';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    ctx.fillStyle = 'cyan';
+    ctx.font = '12px sans-serif';
+    ctx.fillText(this.frame, 12, 24);
+  }
+
+  step() {
+    if (this.active) {
+      this.animationFrameId = requestAnimationFrame(this.step.bind(this));
+      this.update();
+      this.render();
+      this.frame++;
+    }
+  }
+
+}
