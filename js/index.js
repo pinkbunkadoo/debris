@@ -10,8 +10,9 @@ function onFocus() {
 
 document.addEventListener('DOMContentLoaded', () => {
   app = new App();
-  app.play();
-  app.addEntity(20, 1, 0);
+  app.addEntity(20, 1);
+  app.addEntity(60, 1);
+  
   window.addEventListener('blur', onBlur);
   window.addEventListener('focus', onFocus);
 });
